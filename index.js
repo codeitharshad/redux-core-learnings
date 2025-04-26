@@ -1,10 +1,14 @@
-// Related documentation availabel at
+// Related documentation available at
 // https://www.notion.so/Redux-Core-Concepts-Complete-Refresh-1e166b7cd3f580819f2cd6247f585b57?pvs=4
 
 const redux = require("redux");
 const createStore = redux.legacy_createStore;
 const bindActionCreators = redux.bindActionCreators;
 const combineReducers = redux.combineReducers;
+const applyMiddleware = redux.applyMiddleware;
+
+const reduxLogger = require("redux-logger");
+const logger = reduxLogger.createLogger();
 
 const CAKE_OREDERED = "CAKE_OREDERED";
 const CAKE_RESTOCKED = "CAKE_RESTOCKED";
@@ -51,13 +55,13 @@ function restockIceCream(qty = 1) {
 //   numOfIceCreams: 20,
 // };
 
-const initialCakeState ={
-    numOfCakes:10,
-}
+const initialCakeState = {
+  numOfCakes: 10,
+};
 
-const initialIceCreamState ={
-    numOfIceCreams:20
-}
+const initialIceCreamState = {
+  numOfIceCreams: 20,
+};
 
 // Reducer: function that accepts state and returns the next state of the application.
 // (previousState, action) => newState
@@ -102,18 +106,17 @@ const iceCreamReducer = (state = initialIceCreamState, action) => {
 };
 
 const rootReducer = combineReducers({
-    cake: cakeReducer,
-    iceCream: iceCreamReducer
-})
+  cake: cakeReducer,
+  iceCream: iceCreamReducer,
+});
 
-
-
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(logger));
 console.log("Initial State", store.getState());
 
-const unsubscribe = store.subscribe(() =>
-  console.log("updated state", store.getState())
-);
+const unsubscribe = store.subscribe(() => {
+//   console.log("updated state", store.getState());
+// if middlewear 'logger' is not used then we can uncomment above code
+});
 
 // store.dispatch(orderCake());
 // store.dispatch(orderCake());
